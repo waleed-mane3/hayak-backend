@@ -137,16 +137,6 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
-
-    # custom
-    # https://www.procoding.org/jwt-token-as-httponly-cookie-in-django/
-    # # https://stackoverflow.com/questions/66247988/how-to-store-jwt-tokens-in-httponly-cookies-with-drf-djangorestframework-simplej
-    # 'AUTH_COOKIE': 'access',  # Cookie name. Enables cookies if value is set.
-    # 'AUTH_COOKIE_DOMAIN': None ,#"hayak-application.herokuapp.com",     # A string like "example.com", or None for standard domain cookie.
-    # 'AUTH_COOKIE_SECURE': False,    # Whether the auth cookies should be secure (https:// only).
-    # 'AUTH_COOKIE_HTTP_ONLY' : True, # Http only cookie flag.It's not fetch by javascript.
-    # 'AUTH_COOKIE_PATH': '/',        # The path of the auth cookie.
-    # 'AUTH_COOKIE_SAMESITE': None,  # Whether to set the flag restricting cookie leaks on cross-site requests. This can be 'Lax', 'Strict', or None to disable the flag.
 }
 
 
@@ -188,17 +178,6 @@ TEMPLATES = [
 
 
 
-# # DATABASES ##################################################################### 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'db_h_db',
-#         'USER': 'db_h_user',
-#         'PASSWORD': 'hhaya_1992',
-#         'HOST': 'h-identifier.culhzk21cl27.eu-west-1.rds.amazonaws.com',
-#         'PORT':'5432'
-#     }
-# }
 # DATABASE ################################################################# 
 DATABASES = {
     'default': {
@@ -274,12 +253,21 @@ if is_s3_enabled:
     STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
     MEDIA_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION_MEDIA)
 else:
-    AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='eu-west-1')
+    # AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='eu-west-1')
     # AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
     # AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-    STATIC_URL = '/static/'
-    MEDIA_URL = '/media/'
+    
+    AWS_ACCESS_KEY_ID = 'AKIASEDK2WEKU37YOZP5'
+    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_STORAGE_BUCKET_NAME = 'hayak-bucket'
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_DEFAULT_ACL = None
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    
+    # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    # STATIC_URL = '/static/'
+    # MEDIA_URL = '/media/'
 
 
 

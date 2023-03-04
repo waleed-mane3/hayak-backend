@@ -1,4 +1,5 @@
-@hayak_api_local = http://127.0.0.1:9001/api
+@hayak_api_local = http://127.0.0.1:9000/api
+# @hayak_api_local = https://hayak-application.herokuapp.com/api
 
 ###
 # @name auth_login_local
