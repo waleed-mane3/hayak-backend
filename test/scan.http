@@ -1,0 +1,35 @@
+@hayak_api_local = http://127.0.0.1:9001/api
+
+###
+# @name auth_login_local
+POST {{hayak_api_local}}/auth/token/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "khalid.sm.m@gmail.com",
+    "password": "hayak_123"
+}
+
+
+### Get All Scans of the event owner
+@sad = sdasdasd
+# @name user_account
+GET {{hayak_api_local}}/scan/event/2/scan/list/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+
+
+### create scan for this invitation
+@sad = sdasdasd
+# @name user_account
+POST {{hayak_api_local}}/scan/event/15/scan/list/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+
+{
+    "invitation": "b24a0d88-c521-421a-a3d1-f8c662383d22"
+}
+
+
+
+
+

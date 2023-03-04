@@ -1,0 +1,49 @@
+@bluehorse_api_local = http://127.0.0.1:9001/api
+# @taahab_api_local = https://hayak-application.herokuapp.com/api
+
+
+###
+# @name auth_login_local
+POST {{bluehorse_api_local}}/auth/token/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "khalid.sm.m@gmail.com",
+    "password": "hayak_123"
+}
+
+
+### Get event invitations #####################################
+GET {{bluehorse_api_local}}/event/10/invitation/list/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################
+
+
+
+### create invitation #########################################
+# @name user_account
+POST {{bluehorse_api_local}}/event/15/invitation/list/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+
+{
+    "first_name": "Waleed",
+    "last_name": "Abdulmanea",
+    "mobile": "0512515215", 
+    "email": "waoa2008@gmail.com"
+}
+###############################################################
+
+
+
+### update invitation #########################################
+# @name user_account
+PUT {{bluehorse_api_local}}/event/1/invitation/details/e673b0d6-7829-4462-9c15-ecb16461e9a7/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+
+{
+    "first_name": "updated ya man"
+}
+###############################################################

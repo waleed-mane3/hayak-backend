@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  bluehorse.backend.svc.local:
+    container_name: backend
+    volumes:
+      - ./static:/app/static
+      - ./media:/app/media
+      # below line for development purposes only. Enabling developer to see changes instantely without the need to rebuild
+      - .:/app
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - hayak_backend/.env
+    restart: always
+    depends_on:
+      - bluehorse.db.svc.local
+  bluehorse.proxy.svc.local:
+    container_name: nginx
+    build: ./devops/nginx
+    volumes:
+      - ./static:/app/static
+      - ./media:/app/media
+    ports:
+      - "80:80"
+    depends_on:
+      - bluehorse.backend.svc.local
+  bluehorse.db.svc.local:
+    container_name: database
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - devops/postgres/db.env
+    ports:
+      - "5432:5432"
+
+networks:
+  default:
+    name: app_custom_network
+
+volumes:
+  postgres_data:

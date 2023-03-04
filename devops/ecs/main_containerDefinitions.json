@@ -1,0 +1,70 @@
+{
+    "containerDefinitions": [
+        {
+            "name": "backend_service",
+            "image": "path/to/repo",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "containerPort": 8000,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name":"DEBUG",
+                    "value":"True"
+                },
+                {
+                    "name":"APP_URL",
+                    "value":"api.hayaksa.com"
+                },
+                {
+                    "name":"S3_ENABLED",
+                    "value":"True"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "secrets": [
+                {
+                    "name": "HOST_URL",
+                    "valueFrom": "arn:aws:ssm:eu-west-1:146252935445:parameter/main_bluehorse_host_url"
+                },
+                {
+                    "name": "DB_HOST",
+                    "valueFrom": "arn:aws:ssm:eu-west-1:146252935445:parameter/main_bluehorse_db_host_url"
+                },
+                {
+                    "name": "DB_NAME",
+                    "valueFrom": "arn:aws:ssm:eu-west-1:146252935445:parameter/main_bluehorse_db_name"
+                },
+                {
+                    "name": "DB_USER",
+                    "valueFrom": "arn:aws:ssm:eu-west-1:146252935445:parameter/main_bluehorse_db_username"
+                },
+                {
+                    "name": "DB_PASSWORD",
+                    "valueFrom": "arn:aws:ssm:eu-west-1:146252935445:parameter/main_bluehorse_db_password"
+                },
+                {
+                    "name": "AWS_STORAGE_BUCKET_NAME",
+                    "valueFrom": "arn:aws:ssm:eu-west-1:146252935445:parameter/main_bluehorse_s3_bucket_name"
+                },
+                {
+                    "name":"AWS_S3_CUSTOM_DOMAIN",
+                    "valueFrom": "arn:aws:ssm:eu-west-1:146252935445:parameter/main_bluehorse_s3_cloudfront_url"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/CLUSTER_NAME/SERVICE_NAME",
+                    "awslogs-region": "eu-west-1",
+                    "awslogs-stream-prefix": "task"
+                }
+            }
+        }
+    ]
+}

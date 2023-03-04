@@ -1,0 +1,7 @@
+{
+    "invitationStatus": [
+        "pending",
+        "confirmed",
+        "attended"
+    ]
+}
