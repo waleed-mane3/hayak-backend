@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from account.api.views import get_health
 
-# Swagger 
+# Swagger
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -33,7 +33,7 @@ urlpatterns = [
     path('api/scan/', include('scan.api.urls')),
     path('api/design/', include('design.api.urls')),
     path('api/health/', get_health),
-    # Swagger 
+    # Swagger
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 
