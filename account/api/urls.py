@@ -14,7 +14,7 @@ urlpatterns = [
     path('user/update/', update_user, name='update_client'), # admin, client
 
 
-    # Account 
-    # path('event/list/', update_user, name='update_client'), # GET LIST, POST user
-    # path('event/details/<str:pk>/', update_user, name='update_client'), GET, UPDTE and DELETE
+    # # Account 
+    # path('list/', update_user, name='update_client'), # GET LIST, POST user
+    # path('details/<str:pk>/', update_user, name='update_client'), # GET, UPDTE and DELETE
 ]
