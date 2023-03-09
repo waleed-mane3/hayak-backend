@@ -11,7 +11,7 @@ from typing import Iterable
 
 def getAllCustomUser():
     try:
-        return CustomUser.objects.all(is_active=True)
+        return CustomUser.objects.filter(is_active=True)
     except CustomUser.DoesNotExist as er:
         print('sadkljfghkasjdfhlk')
 

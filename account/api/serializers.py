@@ -305,6 +305,9 @@ class MainClientSerializer(serializers.ModelSerializer):
 
 
 
+
+
+
 # This is used to update #first_sign_in# field
 class UpdateUserSerializer(ModelSerializer):
     class Meta:

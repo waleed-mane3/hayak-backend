@@ -47,6 +47,7 @@ from utils.pagination import CustomPagination
 
 from utils.emails import *
 import time
+from django.conf import settings
 
 
 
@@ -78,9 +79,9 @@ class EventList(APIView):
         user = request.user
         data = {}
         
-        if user.user_type != 2 or user.user_type != 1:
-            data['detail'] = "You higher permission!" 
-            request_status = status.HTTP_401_UNAUTHORIZED
+        if user.user_type != settings.CLIENT:
+            data['detail'] = "You need higher permission!" 
+            request_status = status.HTTP_400_BAD_REQUEST
             return Response(data=data, status=request_status)
 
 

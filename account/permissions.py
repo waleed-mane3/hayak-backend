@@ -14,5 +14,5 @@ class UserTypeAccessAdminOrClient(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.user.user_type != settings.SCANNER:
              return True
-
+             
         return False
