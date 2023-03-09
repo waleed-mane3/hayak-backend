@@ -6,7 +6,7 @@ POST {{hayak_api_local}}/auth/token/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "khalid.sm.m@gmail.com",
+    "email": "khalid.asm.m@gmail.com",
     "password": "hayak_123"
 }
 

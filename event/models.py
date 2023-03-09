@@ -151,7 +151,7 @@ class Invitation(models.Model):
     name = models.CharField(max_length=500, null=True, blank=True)
     mobile = models.CharField(max_length=500, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
-    entries = models.IntegerField(default=1)
+    tickets = models.IntegerField(default=1)
     invitation_type = models.CharField(max_length=1000, null=True, blank=True, default="no type")
     role = models.CharField(default="participant", max_length=256, choices=ROLE_CHOICES, null=True, blank=True)
     status = models.ForeignKey(InvitationStatus, on_delete=models.CASCADE, null=True, default=2)

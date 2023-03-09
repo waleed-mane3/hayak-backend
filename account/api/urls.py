@@ -1,8 +1,10 @@
 from django.urls import path
 from account.api.views import (
     user_info,
-    create_client, 
+    create_client,
     update_user,
+    Account,
+    AccountDetails,
 )
 
 app_name = 'account'
@@ -14,7 +16,7 @@ urlpatterns = [
     path('user/update/', update_user, name='update_client'), # admin, client
 
 
-    # # Account 
-    # path('list/', update_user, name='update_client'), # GET LIST, POST user
-    # path('details/<str:pk>/', update_user, name='update_client'), # GET, UPDTE and DELETE
+    # Account
+    path('list/', Account.as_view(), name='client_accounts'), # GET LIST, POST user
+    path('details/<str:pk>/', AccountDetails.as_view(), name='account_details'), # GET, UPDTE and DELETE
 ]

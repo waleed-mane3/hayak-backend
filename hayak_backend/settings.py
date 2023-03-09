@@ -10,6 +10,8 @@ from datetime import timedelta
 ADMIN=1
 CLIENT=2
 STAFF=3
+SCANNER=4
+DATA_ENTRY=5
 
 
 
@@ -39,7 +41,7 @@ ALLOWED_HOSTS = [
         env('HOST_URL'),
         AWS_LOCAL_IP,
         '127.0.0.1',
-        '81ff-31-166-186-157.ngrok.io'
+        '59ef-176-224-76-160.ngrok.io'
     ]
 CORS_ALLOW_METHODS = [
     "DELETE",
@@ -61,7 +63,7 @@ CSRF_TRUSTED_ORIGINS.append('http://127.0.0.1')
 
 # SECURITY #####################################################################
 # SECRET_KEY = 'django-insecure-g4@!&)+ds#+zw0*%93%5(x(8c*760zim&@pxc8j*8y5m$@3*e3'
-# DEBUG = True
+DEBUG = True
 # ALLOWED_HOSTS = ["*", "64d1-31-166-129-65.ngrok.io"]
 
 
@@ -111,7 +113,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=90),
     'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': False,
+    'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
 
     'ALGORITHM': 'HS256',
@@ -266,7 +268,7 @@ else:
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     
     # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-    # STATIC_URL = '/static/'
+    STATIC_URL = '/static/'
     # MEDIA_URL = '/media/'
 
 

@@ -67,6 +67,7 @@ class UpdateEventSerializer(ModelSerializer):
 class InvitationSerializer(ModelSerializer):
     status = serializers.StringRelatedField()
     # email = serializers.SerializerMethodField('guest_email')
+    used_tickets = serializers.SerializerMethodField("used_tickets_function")
 
     class Meta:
         model = Invitation
@@ -75,6 +76,11 @@ class InvitationSerializer(ModelSerializer):
     # def guest_email(self, obj):
     #     email = obj.email
     #     return email.lower()
+
+    def used_tickets_function(self, obj):
+        tickets_count = obj.scan_set.all().count()
+        return tickets_count
+
     
 
 

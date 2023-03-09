@@ -95,17 +95,18 @@ def scan_list(request, pk):
             return Response(data=data, status=request_status)
 
 
-        # check if the number of scans exceeded the entries no 
-        invitation_entries = invitation.entries
+        # check if the number of scans exceeded the tickets no 
+        invitation_tickets = invitation.tickets
         invitation_scans = Scan.objects.filter(invitation=invitation).count()
-        if invitation_scans >= invitation_entries:
+        if invitation_scans >= invitation_tickets:
+            # data["id"] = invitation.id
             data['detail'] = "You have reached the limit of scans!"
             data['name'] = f"{invitation.first_name} {invitation.last_name}"
             data['event_name'] = invitation.event.name
             data['invitation_type'] = invitation.invitation_type
-            data["total"] = invitation_entries
+            data["total"] = invitation_tickets
             data["used"] = invitation_scans
-            data["unused"] = invitation_entries - invitation_scans
+            data["unused"] = invitation_tickets - invitation_scans
             request_status = status.HTTP_400_BAD_REQUEST
             return Response(data=data, status=request_status)
 
@@ -118,15 +119,16 @@ def scan_list(request, pk):
             invitation_to_update.update(status=3) # this has to by dynamic
 
 
-            invitation_entries = invitation.entries
+            invitation_tickets = invitation.tickets
             invitation_scans = Scan.objects.filter(invitation=invitation).count()
+            # data["id"] = invitation.id
             data['success'] = "Scan Success!"
             data['name'] = f"{invitation.first_name} {invitation.last_name}"
             data['event_name'] = invitation.event.name
             data['invitation_type'] = invitation.invitation_type
-            data["total"] = invitation_entries
+            data["total"] = invitation_tickets
             data["used"] = invitation_scans
-            data["unused"] = invitation_entries - invitation_scans
+            data["unused"] = invitation_tickets - invitation_scans
             request_status = status.HTTP_201_CREATED
         else:
             data['detail'] = serializer.errors
