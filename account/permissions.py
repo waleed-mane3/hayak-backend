@@ -12,7 +12,7 @@ class UserTypeAccessAdminOrClient(permissions.BasePermission):
     message = 'Account type is not permitted to preform this request'
 
     def has_permission(self, request, view):
-        if request.user.user_type != settings.STAFF:
+        if request.user.user_type != settings.SCANNER:
              return True
-
+             
         return False

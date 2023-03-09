@@ -227,7 +227,6 @@ class Account(APIView):
 
 
 
-
 class AccountDetails(APIView):
     """Get and create accounts"""
 
