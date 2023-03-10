@@ -216,7 +216,7 @@ def invitation_list(request, pk):
     if request.method == 'POST':
         serializer = InvitationSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(event=event)
+            serializer.save(event=event, added_by=user)
             data['success'] = "Invitation has been created successfully!"
             request_status = status.HTTP_201_CREATED
         else:
@@ -287,6 +287,7 @@ def invitation_details(request, pk, pk2):
 
 
     # Delete Invitation 
+    # https://itnext.io/mass-delete-via-http-rest-how-do-you-do-it-1bff0f5eb72d
     if request.method == 'DELETE':
         operation = invitation.delete()
         data = {}

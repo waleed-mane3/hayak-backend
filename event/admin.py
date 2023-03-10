@@ -42,7 +42,7 @@ class RankImportExport(ImportExportModelAdmin):
 
 @admin.register(Invitation)
 class InvitationImportExport(ImportExportModelAdmin):
-    list_display = ['id', 'event','first_name', 'last_name', 'name', 'mobile', 'email', 'tickets', 'invitation_type', 'role', 'status', 'reference', 'qr', 'invitation', 'is_generated', 'email_sent']
+    list_display = ['id', 'event','first_name', 'last_name', 'name', 'mobile', 'email', 'tickets', 'invitation_type', 'role', 'status', 'added_by', 'reference', 'qr', 'invitation', 'is_generated', 'email_sent']
     list_per_page = 50
     search_fields = ['first_name', 'last_name', 'name', 'mobile', 'email', 'role', 'reference']
     list_filter = ['role', 'status', 'is_generated']

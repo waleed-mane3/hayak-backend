@@ -5,7 +5,7 @@ from rest_framework.response import Response
 ##custom pagination##
 class CustomPagination(PageNumberPagination):
 
-    page_size = 10
+    page_size = 20
     page_size_query_param = 'page_size'
     def get_paginated_response(self, data):
         return Response({
@@ -17,3 +17,5 @@ class CustomPagination(PageNumberPagination):
             'previous': self.get_previous_link(),
             'results': data,
         })
+
+

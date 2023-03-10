@@ -41,7 +41,7 @@ ALLOWED_HOSTS = [
         env('HOST_URL'),
         AWS_LOCAL_IP,
         '127.0.0.1',
-        '59ef-176-224-76-160.ngrok.io'
+        'c391-176-224-76-160.ngrok.io'
     ]
 CORS_ALLOW_METHODS = [
     "DELETE",
@@ -63,7 +63,7 @@ CSRF_TRUSTED_ORIGINS.append('http://127.0.0.1')
 
 # SECURITY #####################################################################
 # SECRET_KEY = 'django-insecure-g4@!&)+ds#+zw0*%93%5(x(8c*760zim&@pxc8j*8y5m$@3*e3'
-DEBUG = True
+# DEBUG = True
 # ALLOWED_HOSTS = ["*", "64d1-31-166-129-65.ngrok.io"]
 
 
