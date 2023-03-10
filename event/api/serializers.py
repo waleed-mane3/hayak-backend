@@ -66,8 +66,8 @@ class UpdateEventSerializer(ModelSerializer):
 
 class InvitationSerializer(ModelSerializer):
     status = serializers.StringRelatedField()
-    # email = serializers.SerializerMethodField('guest_email')
     used_tickets = serializers.SerializerMethodField("used_tickets_function")
+    added_by = serializers.SerializerMethodField("added_by_function")
 
     class Meta:
         model = Invitation
@@ -80,13 +80,13 @@ class InvitationSerializer(ModelSerializer):
     def used_tickets_function(self, obj):
         tickets_count = obj.scan_set.all().count()
         return tickets_count
+    
+    def added_by_function(self, obj):
+        added_by = f"{obj.first_name} {obj.last_name}"
+        return added_by
+
 
     
-
-
-
-    
-
 
 class UpdateInvitationSerializer(ModelSerializer):
 
@@ -109,8 +109,6 @@ class InvitationStatusSerializer(ModelSerializer):
     class Meta:
         model = InvitationStatus
         fields = ('id', 'label',)
-
-
 
 
 

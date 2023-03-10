@@ -12,6 +12,7 @@ from scan.api.serializers import (
 from event.models import Event, Invitation
 from scan.models import Scan
 from utils.pagination import CustomPagination
+from scan.resources import ScansResource
 
 
 
@@ -135,6 +136,45 @@ def scan_list(request, pk):
             request_status = status.HTTP_400_BAD_REQUEST
 
     return Response(data=data, status=request_status)
+
+
+
+
+
+
+# Export Scans #####################################################################
+@api_view(['GET',])
+@permission_classes([IsAuthenticated])
+def export_scans(request):
+    user = request.user
+    if request.method == 'GET':
+        # Get selected option from form
+        file_format = "XLS"
+
+        try:
+            event_id = request.GET["event"]
+            event = Event.objects.get(id=int(event_id))
+        except:
+            data["details"] = "You must provide the event id!" 
+            request_status = status.HTTP_400_BAD_REQUEST
+            return Response(data=data, status=request_status)
+
+        scans = Scan.objects.filter(event=event)
+
+        if user.id != event.user.id:
+            data["detail"] = "This event does not belong to this client!" 
+            request_status = status.HTTP_400_BAD_REQUEST
+            return Response(data=data, status=request_status)
+
+        scans_resource = ScansResource()
+        dataset = scans_resource.export(scans)
+        data = {}
+
+        response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="exported_data.xls"'
+         
+    return response
+#####################################################################################
 
 
 

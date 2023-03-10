@@ -9,7 +9,7 @@ from auth_system.models import CustomUser
 class Scan(models.Model):
     event = models.ForeignKey(Event, on_delete=models.SET_NULL, null=True, blank=True)
     scanned_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
-    invitation = models.ForeignKey(Invitation, on_delete=models.SET_NULL, null=True, blank=True)
+    invitation = models.ForeignKey(Invitation, on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateField(default=datetime.now)
     time = models.TimeField(default=datetime.now)
 

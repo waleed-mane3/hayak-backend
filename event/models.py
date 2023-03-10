@@ -166,6 +166,8 @@ class Invitation(models.Model):
 
     reference = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     # email_history = models.JSONField(default=email_history)
+
+    added_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     # this date will never be updated
     created_at = models.DateTimeField(null=True, auto_now_add=True)
     # this date will change every time we update entry
@@ -241,7 +243,7 @@ def save_id_inside_qr(sender, instance, created, **kwargs):
             qr_offset = Image.new('RGB', (370, 370), 'white')
             draw_img = ImageDraw.Draw(qr_offset)
             qr_offset.paste(qr_image)
-            file_name = f'{instance.first_name}-{instance.last_name}-{instance.entries}-{instance.mobile}-{str(time.time())}.png'
+            file_name = f'{instance.first_name}-{instance.last_name}-{instance.tickets}-{instance.mobile}-{str(time.time())}.png'
             stream = BytesIO()
             qr_offset.save(stream, 'PNG')
             instance.qr.save(file_name, File(stream), save=False)
