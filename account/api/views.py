@@ -25,6 +25,7 @@ from rest_framework.views import APIView
 from django.conf import settings
 from .queries import *
 from utils.errors import Error, APIError
+from utils.validators import custom_password_validator
 
 
 
@@ -204,11 +205,13 @@ class Account(APIView):
         user = request.user
         data = {}
         user_type = None
-
         try:
             user_type = request.data['user_type']
         except Exception as er:
             raise APIError(Error.INSTANCE_NOT_FOUND, extra=[str(er)])
+
+        # check password validity else will raise a bug
+        passowrd_check = custom_password_validator(passowrd=request.data['password'], useremail=request.data['email'])
 
 
         serializer = CreateMainClientSerializer(data=request.data, context={'user_type':user_type})
