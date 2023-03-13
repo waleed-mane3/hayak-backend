@@ -8,7 +8,6 @@ from account.permissions import UserTypeAccessAdminOrClient
 from tablib import Dataset
 
 from account.api.serializers import (
-    CreateMainClientSerializer,
     CreateMainAdminSerializer,
     UpdateMainClientSerializer,
     UpdateMainAdminSerializer,
@@ -18,6 +17,7 @@ from account.api.serializers import (
     MainClientSerializer,
     ListUsersSerializer,
     UsersDetailsSerializer,
+    CreateAccountsSerializer
     )
 
 from account.models import Client, Admin
@@ -25,7 +25,6 @@ from rest_framework.views import APIView
 from django.conf import settings
 from .queries import *
 from utils.errors import Error, APIError
-from utils.validators import custom_password_validator
 
 
 
@@ -207,25 +206,23 @@ class Account(APIView):
         user_type = None
         try:
             user_type = request.data['user_type']
+            client_info = request.data['client_info']
+            extra_data = request.data['extra_data']
         except Exception as er:
-            raise APIError(Error.INSTANCE_NOT_FOUND, extra=[str(er)])
+            raise APIError(Error.FEILD_IS_REQUIRED, extra=[str(er)])
 
         # check password validity else will raise a bug
-        passowrd_check = custom_password_validator(passowrd=request.data['password'], useremail=request.data['email'])
 
-
-        serializer = CreateMainClientSerializer(data=request.data, context={'user_type':user_type})
+        serializer = CreateAccountsSerializer(data=request.data, context={'user_type':user_type, 'client_info':client_info, 'extra_data': extra_data})
 
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            data['success'] = "User has been created successfully!"
             request_status = status.HTTP_201_CREATED
         else:
-            data['detail'] = serializer.errors
             request_status = status.HTTP_400_BAD_REQUEST
 
-        return Response(data=data, status=request_status)
+        return Response(data=serializer.data, status=request_status)
 #####################################################################
 
 

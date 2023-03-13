@@ -23,7 +23,7 @@ class Client(models.Model):
     is_data_entry = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.field
+        return f"{self.user.first_name} {self.user.last_name}"
 ## End Client Model
 
 
@@ -58,29 +58,29 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 
 ## Scanner Model
 class Scanner(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True) # make sure to archive the deleted user
+    user = models.OneToOneField(Client, on_delete=models.CASCADE, primary_key=True) # make sure to archive the deleted user
     events = models.ManyToManyField(Event, null=True, related_name='scanners')
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}"
+        return f"{self.user.user.first_name} {self.user.user.last_name}"
 ## End Scanner
 
 
 ## Regular Model
 class Regular(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True) # make sure to archive the deleted user
+    user = models.OneToOneField(Client, on_delete=models.CASCADE, primary_key=True) # make sure to archive the deleted user
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}"
+        return f"{self.user.user.first_name} {self.user.user.last_name}"
 ## End Regular
 
 ## Regular Model
 class DataEntry(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True) # make sure to archive the deleted user
+    user = models.OneToOneField(Client, on_delete=models.CASCADE, primary_key=True) # make sure to archive the deleted user
     events = models.ManyToManyField(Event, null=True, related_name='dataEntry')
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}"
+        return f"{self.user.user.first_name} {self.user.user.last_name}"
 ## End Regular
 
 

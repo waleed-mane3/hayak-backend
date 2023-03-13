@@ -47,7 +47,7 @@ class CustomUser(AbstractUser):
     )
 
     username = None
-    email = models.EmailField(_('email address'), unique=True)
+    email = models.EmailField(_('email address'), unique=True, blank=False)
     mobile = models.CharField(_('Mobile Number'), validators=[_PHONE_REGEX], max_length=20, null=True, blank=True)
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=2)
     image = models.ImageField(upload_to="client_logos", null=True, blank=True)
