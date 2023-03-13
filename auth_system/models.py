@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from utils.validators import _PHONE_REGEX
 
 
 
@@ -42,13 +43,12 @@ class UserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = (
         (1, 'Admin'),
-        (2, 'Client'),
-        (3, 'Scanner')
+        (2, 'Client')
     )
 
     username = None
-    email = models.EmailField(_('email address'), unique=True)
-    mobile = models.CharField(_('Mobile Number'), max_length=256, null=True, blank=True)
+    email = models.EmailField(_('email address'), unique=True, blank=False)
+    mobile = models.CharField(_('Mobile Number'), validators=[_PHONE_REGEX], max_length=20, null=True, blank=True)
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=2)
     image = models.ImageField(upload_to="client_logos", null=True, blank=True)
     first_sign_in = models.BooleanField(default=True)
@@ -57,6 +57,11 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+
+    def save(self, *args, **kwargs):
+        self.email = self.email.lower()
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

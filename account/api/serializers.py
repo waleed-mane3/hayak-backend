@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from auth_system.models import CustomUser
-from django.contrib.auth import get_user_model
-from account.models import Client, Admin, Scanner
+from account.models import Client, Admin, Scanner, Regular, DataEntry
 from django.conf import settings
+from utils.validators import custom_password_validator
+
 
 
 
@@ -22,94 +23,104 @@ class ClientSerializer(serializers.ModelSerializer):
 
 
 
-## Create client serializer ############################################################################################
-class CreateMainClientSerializer(serializers.ModelSerializer):
-    """Create a client serializer of any type"""
+## Create Account serializer ############################################################################################
+class CreateAccountsSerializer(serializers.ModelSerializer):
+    """Create a Account serializer"""
 
-
-    # password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
-
-    # extra_info = ClientSerializer()
 
     class Meta:
         model= CustomUser
         fields = ['first_name', 'last_name', 'email', 'mobile', 'password']
         extra_kwargs = {
-            'password': {'write_only': True}, #this will prevent users to read the password when it is passed through the request
+            'password': {'write_only': True, 'required': True}, #this will prevent users to read the password when it is passed through the request
+            'first_name': {'required': True}, # as required field
+            'last_name': {'required': True}, # as required field
+            'email': {'required': True}, # as required field
+            'mobile': {'required': True} # as required field
         }
 
 
-
-    # The first_name validation
-    def validate_first_name(self, value):
-
-        if value == "":
-            raise serializers.ValidationError("First name may not be blank!")
-        else:
-            return value
-
-    # The last_name validation
-    def validate_last_name(self, value):
-
-        if value == "":
-            raise serializers.ValidationError("Last name may not be blank!")
-        else:
-            return value
-
-    # The mobile validation
-    def validate_mobile(self, value):
-
-        if value == "":
-            raise serializers.ValidationError("Last name may not be blank!") # you need to add numbers validation
-        else:
-            return value
-
-
-    # Password cannot be the same as the Email
-    # def validate(self, data):
-    #     if data['email'] == data["password"]:
-    #         raise serializers.ValidationError("The passward cannot be the same as your email")
-
-
-    # The Passowrd validation
-    def validate_password(self, value):
-
-        if len(value) < 6 or len(value) > 12:
-            raise serializers.ValidationError("Password must between 6 - 12 characters")
-        else:
-            return value
-
-
     def save(self):
-        ### Doing the check of the NONE for the type cuz there is old endpoint useed it and no conflict
-        user_type = self.context.get("user_type")
-        if user_type != settings.CLIENT and user_type != settings.SCANNER and user_type != None:
-            raise serializers.ValidationError("user type is Not officially supported")
 
+        # Validate the incoming custom fields
+        client_type = None
+        user_type = None
+        client_data = None
+        try:
+            user_type = self.context.get("user_type")
+            client_data = self.context.get("client_info")
+            client_type = client_data['client_type']
+            ## Extra data will be slightly diff from client type
+            extra_data = self.context.get("extra_data")
+        except Exception as e:
+            raise serializers.ValidationError(f"{e}: field is Required")
+
+
+
+        # Mapping model per user incoming data
+        def fetchModel(vlaue):
+            switcher = {
+                1: Admin,
+                2: Client,
+                3: Regular,
+                4: Scanner,
+                5: DataEntry,
+            }
+            return switcher.get(vlaue, vlaue)
+
+
+        def UpdateClientFieldTypeBoolen(inctance, client_type):
+            """update client account type is regular or scanner or data entry"""
+            if client_type == 3:
+                inctance.is_regular = True
+            if client_type == 4:
+                inctance.is_scanner = True
+            if client_type == 5:
+                inctance.is_data_entry = True
+            inctance.save()
+            return inctance
+
+
+        # Passowrd Validator Custom for specification else will raise Custom Error
+        passowrd_check = custom_password_validator(passowrd=self.validated_data['password'], useremail=self.validated_data['email'])
+
+
+        ### Doing the check of the NONE for the type cuz there is old endpoint useed it and no conflict
+
+        if user_type != settings.CLIENT and user_type != settings.ADMIN:
+            raise serializers.ValidationError("User type is Not officially supported")
+
+
+
+        ## Create Custom user with user_type
         user = CustomUser(
             first_name = self.validated_data['first_name'],
             last_name = self.validated_data['last_name'],
             mobile = self.validated_data['mobile'],
             email = self.validated_data['email'],
-            user_type = user_type if user_type != None else 2 ### Using this approch CUZ there is another view not passing the user type as context parameter
+            user_type = user_type
         )
 
         password = self.validated_data['password']
-        # if password != password2:
-        #     raise serializers.ValidationError({'password': 'Passwords must match.'})
         user.set_password(password)
+
         user.save()
-        # Create client profile
-        # client_data = self.validated_data.pop('extra_info')
 
 
-        #Creating the model by the user type
+        ## END Create Custom user
 
-        if user_type == settings.CLIENT or user_type == None:
-            Client.objects.create(user=user)
-        elif user_type == settings.SCANNER:
-            Scanner.objects.create(user=user)
+        ## Create Main account by Custom user instance ADMIN or CLIENT
+        AccountModel = fetchModel(user_type)
+        account = AccountModel.objects.create(user=user)
+        ## END Create Main account by Custom user instance ADMIN or CLIENT
 
+
+        # Creating sub Client model by the Client user type
+        if user_type == settings.CLIENT:
+            ClientModel = fetchModel(client_type)
+            # extra_data empty but required in the post, for future use
+            user = ClientModel.objects.create(user=account, **extra_data)
+            UpdateClientFieldTypeBoolen(account, client_type)
 
 
         return user
@@ -293,6 +304,7 @@ class MainAdminSerializer(serializers.ModelSerializer):
 class MainClientSerializer(serializers.ModelSerializer):
 
     client = ClientSerializer(read_only=True)
+
 
     class Meta:
         model = CustomUser

@@ -13,6 +13,8 @@ class Error(Enum):
     REQUIRED_FIELD = {'code': 0, 'detail': _('This field is required!')}
     DATA_IS_MISSING = {'code': -101, 'detail': _('{} Data is missing!')}
     NO_ACTIVE_ACCOUNT = {'code': -500, 'detail': _('No active account found with the given credentials!')}
+    PASSWORD = {'code': -500, 'detail': _('Password {}')}
+    FEILD_IS_REQUIRED = {'code': -400, "detail": _('{}: This field is required.')}
 
 
 
