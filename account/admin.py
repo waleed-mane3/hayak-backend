@@ -20,3 +20,22 @@ class AdminImportExport(ImportExportModelAdmin):
 @admin.register(Scanner)
 class ScannerImportExport(ImportExportModelAdmin):
     list_display = ['user']
+
+
+class RegularAdmin(admin.ModelAdmin):
+    model = Regular
+
+    list_filter = [
+        'user',
+    ]
+
+class DataEntryAdmin(admin.ModelAdmin):
+    model = DataEntry
+    list_filter = [
+        'user',
+    ]
+
+admin.site.register(Regular, RegularAdmin)
+admin.site.register(DataEntry, DataEntryAdmin)
+
+

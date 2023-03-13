@@ -43,8 +43,7 @@ class UserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = (
         (1, 'Admin'),
-        (2, 'Client'),
-        (3, 'Scanner')
+        (2, 'Client')
     )
 
     username = None
