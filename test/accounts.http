@@ -1,8 +1,8 @@
 @hayak_api_local = http://127.0.0.1:9000/api
 # @hayak_api_local = https://app.hayaksa.com/api
 # USERS
-# admin1@gmail.com 
-# client1@gmail.com 
+# admin1@gmail.com
+# client1@gmail.com
 # scanner1@gmail.com
 # entry1@gmail.com
 
@@ -36,12 +36,16 @@ Authorization: Bearer {{auth_login_local.response.body.access}}
 Content-Type: application/json
 
 {
-    "first_name": "Ahmad",
-    "last_name": "Omar",
-    "email": "ahmad1@gmail.com",
-    "mobile": "0501234855",
-    "user_type": 3,
-    "password": "hayak_123"
+    "first_name":"abdul",
+    "last_name":"alshehri",
+    "mobile":"0568111091",
+    "email":"newTets@gmail.com",
+    "user_type": 2,
+    "password": "l22111@Ds1",
+    "client_info": {
+        "client_type": 5
+    },
+    "extra_data": {}
 }
 ###############################################################
 
