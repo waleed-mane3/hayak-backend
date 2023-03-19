@@ -37,7 +37,7 @@ def get_ec2_instance_ip():
 AWS_LOCAL_IP = get_ec2_instance_ip()
 DEBUG = env('DEBUG', default= False)
 ALLOWED_HOSTS = [
-        env('APP_URL'), 
+        env('APP_URL'),
         env('HOST_URL'),
         AWS_LOCAL_IP,
         '127.0.0.1',
@@ -78,7 +78,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # my apps 
+    # my apps
     'auth_system',
     'account',
     'design',
@@ -86,8 +86,9 @@ INSTALLED_APPS = [
     'package',
     'scan',
     'webhook',
+    'billing',
 
-    # Packages 
+    # Packages
     'rest_framework',
     'django_rest_passwordreset',
     'rest_framework_simplejwt.token_blacklist',
@@ -107,7 +108,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
-# JWT AUTH Settings  
+# JWT AUTH Settings
 from datetime import timedelta
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -180,7 +181,7 @@ TEMPLATES = [
 
 
 
-# DATABASE ################################################################# 
+# DATABASE #################################################################
 DATABASES = {
     'default': {
         'ENGINE': env('DB_ENGINE'),
@@ -231,7 +232,7 @@ USE_TZ = True
 # STATIC_URL = '/static/'
 # MEDIA_URL = '/images/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
-# # S3 BUCKETS CONFIG ### 
+# # S3 BUCKETS CONFIG ###
 # AWS_ACCESS_KEY_ID = 'AKIARHSDXOCNBWZA5MVO'
 # AWS_SECRET_ACCESS_KEY = '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'
 # AWS_STORAGE_BUCKET_NAME = 'hayak-buket'
@@ -258,7 +259,7 @@ else:
     # AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='eu-west-1')
     # AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
     # AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-    
+
     AWS_ACCESS_KEY_ID = 'AKIASEDK2WEKU37YOZP5'
     AWS_SECRET_ACCESS_KEY = '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'
     AWS_STORAGE_BUCKET_NAME = 'hayak-bucket'
@@ -266,7 +267,7 @@ else:
     AWS_DEFAULT_ACL = None
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    
+
     # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     STATIC_URL = '/static/'
     # MEDIA_URL = '/media/'
@@ -277,7 +278,7 @@ else:
 # MISCELLANEOUS ##################################################################
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'auth_system.CustomUser'
-IMPORT_EXPORT_USE_TRANSACTIONS = True 
+IMPORT_EXPORT_USE_TRANSACTIONS = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
