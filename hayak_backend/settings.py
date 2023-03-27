@@ -87,6 +87,7 @@ INSTALLED_APPS = [
     'scan',
     'webhook',
     'billing',
+    'settings',
 
     # Packages
     'rest_framework',

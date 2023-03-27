@@ -42,7 +42,8 @@ class Cards(APIView):
         # else just the client ones
         if user.user_type == settings.ADMIN:
             cards = getAllCards()
-        cards = getClientCards(user=user)
+        else:
+            cards = getClientCards(user=user)
 
         serializer = ListCardsSerializer(cards, many=True)
 
@@ -130,14 +131,15 @@ class Transactions(APIView):
     def get(self, request, format=None):
         user = request.user
         data = {}
-        cards = None
+        transactions = None
         # check if user is admin return all cards in sys
         # else just the client ones
         if user.user_type == settings.ADMIN:
-            cards = getAllTransactions()
-        cards = getClientTransactions(user=user)
+            transactions = getAllTransactions()
+        else:
+            transactions = getClientTransactions(user=user)
 
-        serializer = ListTransactionsSerializer(cards, many=True)
+        serializer = ListTransactionsSerializer(transactions, many=True)
 
 
         request_status = status.HTTP_200_OK
@@ -195,8 +197,8 @@ class TransactionsDetails(APIView):
         user = request.user
         data = {}
         id = self.kwargs['pk']
-        card = getTransaction(pk=id)
-        serializer = GetTransactionSerializer(card)
+        transactions = getTransaction(pk=id)
+        serializer = GetTransactionSerializer(transactions)
 
         request_status = status.HTTP_200_OK
         return Response(data=serializer.data, status=request_status)
