@@ -56,3 +56,16 @@ DELETE {{hayak_api_local}}/settings/general/details/3/ HTTP/1.1
 Authorization: Bearer {{auth_login_local.response.body.access}}
 Content-Type: application/json
 ###############################################################
+
+
+### Get staff setting by event id (as client or admin) #################################
+GET {{hayak_api_local}}/settings/staff/1/list/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################
+
+### Delete staff setting by staff setting obj id (as client or admin)  ######################
+DELETE {{hayak_api_local}}/settings/staff/details/1/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################

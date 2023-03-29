@@ -31,3 +31,19 @@ def getGeneralPk(pk):
         raise APIError(Error.INSTANCE_NOT_FOUND, extra=[General._meta.model_name])
 
 
+
+def getEventStaffSettings(event_id):
+    try:
+        event = getEvent(event_id=event_id)
+        return StaffEventSetting.objects.filter(event=event)
+    except StaffEventSetting.DoesNotExist as er:
+        raise APIError(Error.INSTANCE_NOT_FOUND, extra=[StaffEventSetting._meta.model_name])
+
+
+def getEventStaffSettingsPk(pk):
+    try:
+        return StaffEventSetting.objects.get(id=pk)
+    except StaffEventSetting.DoesNotExist as er:
+        raise APIError(Error.INSTANCE_NOT_FOUND, extra=[StaffEventSetting._meta.model_name])
+
+

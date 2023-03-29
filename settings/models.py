@@ -1,5 +1,6 @@
 from django.db import models
 from event.models import Event
+from account.models import Client
 # Create your models here.
 
 
@@ -18,6 +19,15 @@ class General(models.Model):
     registration = models.BooleanField(default=False)
     communication_method = models.PositiveSmallIntegerField(choices=COMMUNICATION_TYPE_CHOICES, default=1)
     language = models.PositiveSmallIntegerField(choices=LANGUAGE_TYPE_CHOICES, default=1)
+
+
+    def __str__(self):
+        return f"{self.event.name}-{self.event.id}"
+
+class StaffEventSetting(models.Model):
+
+    event = models.ForeignKey(Event, on_delete=models.CASCADE) # make sure to archive the deleted user
+    staff = models.ManyToManyField(Client)
 
 
     def __str__(self):

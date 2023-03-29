@@ -7,3 +7,7 @@ from settings.models import *
 @admin.register(General)
 class GeneralImportExport(ImportExportModelAdmin):
     list_display = ['event', 'registration', 'language']
+
+@admin.register(StaffEventSetting)
+class StaffSettingImportExport(ImportExportModelAdmin):
+    list_display = ['event']

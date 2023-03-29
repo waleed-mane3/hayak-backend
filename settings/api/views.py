@@ -8,9 +8,12 @@ from settings.api.queries import (
     getAllGeneral,
     getEventGeneralSettings,
     getGeneralPk,
+    getEventStaffSettings,
+    getEventStaffSettingsPk,
 )
 from settings.api.serializers import (
     ListGeneralSerializer,
+    ListStaffSettingsSerializer,
 )
 
 
@@ -77,12 +80,86 @@ class GeneralDetails(APIView):
 
 
     def delete(self, request, *args, **kwargs):
-        """Delete will not actually delete, but set the custom user to is_active = False"""
         user = request.user
         data = {}
         id = self.kwargs['pk']
         general = getGeneralPk(pk=id)
         general.delete()
+
+
+        request_status = status.HTTP_204_NO_CONTENT
+        return Response(status=request_status)
+
+# END get update and delete General  ###############################################
+
+
+# List staff setting per event ###############################################
+class StaffSettingByEvent(APIView):
+    """Get and create General per event"""
+
+    permission_classes = [IsAuthenticated, UserTypeAccessAdminOrClient]
+
+    def get(self, request, *args, **kwargs):
+        event_id = kwargs.get('event_id')
+        user = request.user
+        data = {}
+        # check if user is admin return all cards in sys
+        # else just the client ones
+        general = None
+
+        general = getEventStaffSettings(event_id=int(event_id))
+        serializer = ListStaffSettingsSerializer(general, many=True)
+
+
+        request_status = status.HTTP_200_OK
+        return Response(data=serializer.data, status=request_status)
+
+    #### No need for post since we create by default once event is created #################################
+
+# END List staff setting per event  ###############################################
+
+class StaffSettingByEventDetails(APIView):
+    """Get, update and delete General Setting per event """
+
+    permission_classes = [IsAuthenticated, UserTypeAccessAdminOrClient]
+
+
+    ##### GET is not applicable to staff settings
+    # def get(self, request, *args, **kwargs):
+    #     user = request.user
+    #     data = {}
+    #     id = self.kwargs['pk']
+    #     staff = getEventStaffSettingsPk(pk=id)
+    #     serializer = getStaffSettingsSerializer(general)
+
+    #     request_status = status.HTTP_200_OK
+    #     return Response(data=serializer.data, status=request_status)
+
+
+
+
+    ##### Action not clear yet to update !!! #################################
+    # def patch(self, request, *args, **kwargs):
+    #     user = request.user
+    #     data = {}
+    #     id = self.kwargs['pk']
+    #     staff = getGeneralPk(pk=id)
+    #     serializer = ListGeneralSerializer(general, data=request.data)
+    #     if serializer.is_valid(raise_exception=True):
+    #         serializer.save()
+
+
+    #     request_status = status.HTTP_200_OK
+    #     return Response(data=serializer.data, status=request_status)
+
+
+
+    def delete(self, request, *args, **kwargs):
+        user = request.user
+        data = {}
+        id = self.kwargs['pk']
+        staff = getEventStaffSettingsPk(pk=id)
+        staff.delete()
 
 
         request_status = status.HTTP_204_NO_CONTENT
