@@ -10,10 +10,13 @@ from settings.api.queries import (
     getGeneralPk,
     getEventStaffSettings,
     getEventStaffSettingsPk,
+    getEventSettingsbyEvent,
+    getEventSettingsbyEventPk,
 )
 from settings.api.serializers import (
     ListGeneralSerializer,
     ListStaffSettingsSerializer,
+    ListEventSettingsbyEventSerializer,
 )
 
 
@@ -119,12 +122,12 @@ class StaffSettingByEvent(APIView):
 # END List staff setting per event  ###############################################
 
 class StaffSettingByEventDetails(APIView):
-    """Get, update and delete General Setting per event """
+    """Get, update and delete staff Setting per event """
 
     permission_classes = [IsAuthenticated, UserTypeAccessAdminOrClient]
 
 
-    ##### GET is not applicable to staff settings
+    ##### GET is not applicable to staff settings (need more details to the figma design)
     # def get(self, request, *args, **kwargs):
     #     user = request.user
     #     data = {}
@@ -165,4 +168,77 @@ class StaffSettingByEventDetails(APIView):
         request_status = status.HTTP_204_NO_CONTENT
         return Response(status=request_status)
 
-# END get update and delete General  ###############################################
+# END get update and delete staff  ###############################################
+
+
+# List Event Setting per event ###############################################
+class EventSettingByEvent(APIView):
+    """Get and create General per event"""
+
+    permission_classes = [IsAuthenticated, UserTypeAccessAdminOrClient]
+
+    def get(self, request, *args, **kwargs):
+        event_id = kwargs.get('event_id')
+        user = request.user
+        data = {}
+        # check if user is admin return all cards in sys
+        # else just the client ones
+        eventSettings = None
+
+        eventSettings = getEventSettingsbyEvent(event_id=int(event_id))
+        serializer = ListEventSettingsbyEventSerializer(eventSettings, many=True)
+
+
+        request_status = status.HTTP_200_OK
+        return Response(data=serializer.data, status=request_status)
+
+    #### No need for post since we create by default once event is created #################################
+
+# END List Event Setting per event per event  ###############################################
+
+class EventSettingByEventDetails(APIView):
+    """Get, update and delete event Setting per event """
+
+    permission_classes = [IsAuthenticated, UserTypeAccessAdminOrClient]
+
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        data = {}
+        id = self.kwargs['pk']
+        setting = getEventSettingsbyEventPk(pk=id)
+        serializer = ListEventSettingsbyEventSerializer(setting)
+
+        request_status = status.HTTP_200_OK
+        return Response(data=serializer.data, status=request_status)
+
+
+
+
+    def patch(self, request, *args, **kwargs):
+        user = request.user
+        data = {}
+        id = self.kwargs['pk']
+        eventSetting = getEventSettingsbyEventPk(pk=id)
+        serializer = ListEventSettingsbyEventSerializer(eventSetting, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+
+        request_status = status.HTTP_200_OK
+        return Response(data=serializer.data, status=request_status)
+
+
+
+    def delete(self, request, *args, **kwargs):
+        user = request.user
+        data = {}
+        id = self.kwargs['pk']
+        staff = getEventSettingsbyEventPk(pk=id)
+        staff.delete()
+
+
+        request_status = status.HTTP_204_NO_CONTENT
+        return Response(status=request_status)
+
+# END get update and delete event setting per event  ###############################################

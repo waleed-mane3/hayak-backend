@@ -4,6 +4,9 @@ from settings.api.views import (
     GeneralDetails,
     StaffSettingByEvent,
     StaffSettingByEventDetails,
+    EventSettingByEvent,
+    EventSettingByEventDetails,
+
 )
 
 
@@ -19,5 +22,9 @@ urlpatterns = [
     # staff events setting
     path('staff/<str:event_id>/list/', StaffSettingByEvent.as_view(), name='staff_settings_by_event'), # GET LIST, POST user
     path('staff/details/<str:pk>/', StaffSettingByEventDetails.as_view(), name='staff_settings_details'), # GET, UPDTE and DELETE
+
+    # event setting by events
+    path('event/<str:event_id>/list/', EventSettingByEvent.as_view(), name='event_settings_by_event'), # GET LIST, POST user
+    path('event/details/<str:pk>/', EventSettingByEventDetails.as_view(), name='event_settings_by_event_details'), # GET, UPDTE and DELETE
 
 ]

@@ -11,3 +11,16 @@ class GeneralImportExport(ImportExportModelAdmin):
 @admin.register(StaffEventSetting)
 class StaffSettingImportExport(ImportExportModelAdmin):
     list_display = ['event']
+
+
+@admin.register(EventSetting)
+class StaffSettingImportExport(ImportExportModelAdmin):
+    list_display = ['event']
+
+@admin.register(TicketType)
+class StaffSettingImportExport(ImportExportModelAdmin):
+    list_display = ['name']
+
+@admin.register(Zones)
+class StaffSettingImportExport(ImportExportModelAdmin):
+    list_display = ['name']
