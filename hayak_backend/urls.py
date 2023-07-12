@@ -33,6 +33,9 @@ urlpatterns = [
     path('api/scan/', include('scan.api.urls')),
     path('api/design/', include('design.api.urls')),
     path('api/health/', get_health),
+    path('api/billing/', include('billing.api.urls')),
+    path('api/settings/', include('settings.api.urls')),
+
     # Swagger
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

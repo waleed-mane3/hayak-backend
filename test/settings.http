@@ -1,0 +1,123 @@
+@hayak_api_local = http://127.0.0.1:8000/api
+# @hayak_api_local = https://app.hayaksa.com/api
+# USERS
+# admin1@gmail.com
+# client1@gmail.com
+# scanner1@gmail.com
+# entry1@gmail.com
+
+
+
+### Login ####################################################
+# @name auth_login_local
+POST {{hayak_api_local}}/auth/token/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com",
+    "password": "123123"
+}
+##############################################################
+
+
+
+
+### Get general by event id (as client or admin) #################################
+GET {{hayak_api_local}}/settings/general/2/list/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################
+
+
+### get general by id (as client or admin) #######################
+GET {{hayak_api_local}}/settings/general/details/3/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+
+###############################################################
+
+
+### Update general by id (as client or admin) #######################
+PATCH {{hayak_api_local}}/settings/general/details/3/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+
+{
+  "registration": false,
+  "communication_method": 3,
+  "language": 1,
+  "event": 2
+}
+###############################################################
+
+
+### Delete general (as client or admin)  ######################
+DELETE {{hayak_api_local}}/settings/general/details/3/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################
+
+
+### Get staff setting by event id (as client or admin) #################################
+GET {{hayak_api_local}}/settings/staff/1/list/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################
+
+### Delete staff setting by staff setting obj id (as client or admin)  ######################
+DELETE {{hayak_api_local}}/settings/staff/details/1/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################
+
+
+
+#############EVENT SETTING PER EVENT ###############
+
+### Get event setting by event id (as client or admin) #################################
+GET {{hayak_api_local}}/settings/event/1/list/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################
+
+GET {{hayak_api_local}}/settings/event/details/2/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+
+###############################################################
+
+
+### Update general by id (as client or admin) #######################
+PATCH {{hayak_api_local}}/settings/event/details/2/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+
+{
+    "id": 2,
+    "zones": [
+        {
+            "id": 1,
+            "name": "zones 11"
+        },
+        {
+            "name": "zones 1 eeeee"
+        }
+    ],
+    "ticket_type": [
+        {
+            "id": 8,
+            "name": "ticket newsssss typed updtae 1"
+        }
+    ],
+    "multiple_tickets_per_qr": true,
+    "entries_per_qr": 1,
+    "event": 1
+}
+###############################################################
+
+
+### Delete general (as client or admin)  ######################
+DELETE {{hayak_api_local}}/settings/general/details/3/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################
