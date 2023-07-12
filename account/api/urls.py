@@ -17,6 +17,6 @@ urlpatterns = [
 
 
     # Account
-    path('list/', Account.as_view(), name='client_accounts'), # GET LIST, POST user
+    path('list/', Account.as_view(), name='client_accounts'), # GET LIST, POST USER
     path('details/<str:pk>/', AccountDetails.as_view(), name='account_details'), # GET, UPDTE and DELETE
 ]

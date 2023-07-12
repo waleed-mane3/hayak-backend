@@ -30,7 +30,7 @@ from utils.errors import Error, APIError
 
 
 
-# Create Client ###############################################################
+# Create Client #####################################################
 @api_view(['POST',])
 def create_client(request):
 
@@ -61,10 +61,11 @@ def create_client(request):
             request_status = status.HTTP_400_BAD_REQUEST
 
         return Response(data=data, status=request_status)
-# End create client ###########################################################
+# End create client #################################################
 
 
-# Update user ##############################################################
+
+# Update user #######################################################
 @api_view(['PUT',])
 @permission_classes([IsAuthenticated])
 def update_user(request):
@@ -87,11 +88,11 @@ def update_user(request):
             request_status = status.HTTP_400_BAD_REQUEST
 
         return Response(data=data, status=request_status)
-# End update user ###########################################################
+# End update user ###################################################
 
 
 
-# Update password ##############################################################
+# Update password ###################################################
 @api_view(['PUT',])
 @permission_classes([IsAuthenticated])
 def update_password(request):
@@ -110,18 +111,11 @@ def update_password(request):
             request_status = status.HTTP_400_BAD_REQUEST
 
         return Response(data=data, status=request_status)
-# End update password ###########################################################
+# End update password ###############################################
 
 
 
-
-
-
-
-
-
-
-# Get User Info #################################################################
+# Get User Info #####################################################
 @api_view(['GET',])
 @permission_classes([IsAuthenticated])
 def user_info(request):
@@ -137,17 +131,10 @@ def user_info(request):
     data = serializer.data
 
     return Response(data=data, status=request_status)
-#################################################################################
+#####################################################################
 
 
-
-
-
-
-
-
-
-# Update Event
+# Update Event ######################################################
 @api_view(['PUT',])
 @permission_classes([IsAuthenticated])
 def update_account(request):
@@ -162,19 +149,15 @@ def update_account(request):
             return Response(data=data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#####################################################################
 
 
-
-
-
-
-
-# Get Health
+# Get Health ########################################################
 @api_view(['GET',])
 def get_health(request):
     request_status = status.HTTP_200_OK
     return Response(status=request_status)
-
+#####################################################################
 
 
 # List & Create Event ###############################################
@@ -226,7 +209,7 @@ class Account(APIView):
 #####################################################################
 
 
-
+#####################################################################
 class AccountDetails(APIView):
     """Get and create accounts"""
 
@@ -265,3 +248,4 @@ class AccountDetails(APIView):
             serializer.save()
         request_status = status.HTTP_200_OK
         return Response(data=serializer.data, status=request_status)
+#####################################################################

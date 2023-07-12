@@ -23,7 +23,7 @@ class ClientSerializer(serializers.ModelSerializer):
 
 
 
-## Create Account serializer ############################################################################################
+## Create Account serializer ############################################################################################################
 class CreateAccountsSerializer(serializers.ModelSerializer):
     """Create a Account serializer"""
 
@@ -127,6 +127,7 @@ class CreateAccountsSerializer(serializers.ModelSerializer):
 # End create Client #####################################################################################################################
 
 
+
 ## Update Client serializer #############################################################################################################
 class UpdateMainClientSerializer(serializers.ModelSerializer):
 
@@ -152,11 +153,11 @@ class UpdateMainClientSerializer(serializers.ModelSerializer):
             client.save()
 
         return instance
-# End update client ####################################################################################################################################
+# End update client #####################################################################################################################
 
 
 
-## Create admin serializer ############################################################################################
+## Create admin serializer ##############################################################################################################
 class CreateMainAdminSerializer(serializers.ModelSerializer):
     extra_info = AdminSerializer()
 
@@ -228,9 +229,12 @@ class CreateMainAdminSerializer(serializers.ModelSerializer):
         Admin.objects.create(user=user, **admin_data)
 
         return user
-# End create admin #####################################################################################################################
+# End create admin ######################################################################################################################
 
-## Update admin serializer #############################################################################################################
+
+
+
+## Update admin serializer ##############################################################################################################
 class UpdateMainAdminSerializer(serializers.ModelSerializer):
 
     extra_info = AdminSerializer()
@@ -254,11 +258,11 @@ class UpdateMainAdminSerializer(serializers.ModelSerializer):
             admin.save()
 
         return instance
-# End update client ####################################################################################################################################
+# End update client #####################################################################################################################
 
 
 # update password for all users
-## Update serializer #############################################################################################################
+## Update serializer ####################################################################################################################
 class UpdateUserPasswordSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -283,14 +287,12 @@ class UpdateUserPasswordSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-# End update password for all users ####################################################################################################################################
+# End update password for all users #####################################################################################################
 
 
 
 
-
-
-## Info Admin serializer #############################################################################################################
+## Info Admin serializer ################################################################################################################
 class MainAdminSerializer(serializers.ModelSerializer):
 
     admin = AdminSerializer(read_only=True)
@@ -298,9 +300,12 @@ class MainAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('first_name', 'last_name', 'email', 'user_type', 'admin',)
-# End Info Admin #####################################################################################################################
+# End Info Admin ########################################################################################################################
 
-## Info Client serializer #############################################################################################################
+
+
+
+## Info Client serializer ###############################################################################################################
 class MainClientSerializer(serializers.ModelSerializer):
 
     client = ClientSerializer(read_only=True)
@@ -309,37 +314,36 @@ class MainClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('first_name', 'last_name', 'email', 'user_type', 'client',)
-# End Info Client #####################################################################################################################
+# End Info Client #######################################################################################################################
 
 
 
-
-
-
-
-
-
-
-# This is used to update #first_sign_in# field
+# This is used to update #first_sign_in# field ##########
 class UpdateUserSerializer(ModelSerializer):
     class Meta:
 
         model = CustomUser
         fields = ['id', 'first_name', 'first_sign_in', ]
+#########################################################
 
 
-##List all users with all type if Client will return all staff of any type
+
+## List all users with all type if Client will return all staff of any type #############################################################
 class ListUsersSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
         exclude = ('user_permissions', 'groups', 'first_sign_in', 'password', )
+#########################################################################################################################################
 
 
-### For user details get a user, update or delete
+
+
+### For user details get a user, update or delete #######################################################################################
 class UsersDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
         exclude = ('user_permissions', 'groups', 'password', )
         read_only_fields = ('email',)
+#########################################################################################################################################

@@ -82,7 +82,7 @@ class InvitationSerializer(ModelSerializer):
         return tickets_count
     
     def added_by_function(self, obj):
-        added_by = f"{obj.first_name} {obj.last_name}"
+        added_by = f"{obj.added_by.first_name} {obj.added_by.last_name}"
         return added_by
 
 

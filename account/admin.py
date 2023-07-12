@@ -31,6 +31,7 @@ class DataEntryAdmin(admin.ModelAdmin):
     model = DataEntry
     list_display = ['user']
 
+
 admin.site.register(Regular, RegularAdmin)
 admin.site.register(DataEntry, DataEntryAdmin)
 
