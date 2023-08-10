@@ -7,6 +7,86 @@ from utils.validators import custom_password_validator
 
 
 
+###########################################################################
+# ACTION DONE BY CLIENTS ##################################################
+###########################################################################
+
+
+## Register New Client Serializer #########################################
+class CreateClientSerializer(serializers.ModelSerializer):
+
+    password2 = serializers.CharField(write_only=True, style={'input_type': 'password'})
+
+    class Meta:
+        model = CustomUser
+        fields = ('first_name', 'last_name', 'email', 'mobile', 'password', 'password2',)
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def validate(self, data):
+        password=data.get('password')
+        password2=data.pop('password2')
+        if (password and password2) and password != password2:
+            raise serializers.ValidationError("Password and confirm password do not match!")
+
+        return data
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        instance = self.Meta.model(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
+## End Register New Client Serializer #####################################
+
+## Get Client Serializer ##################################################
+class GetClientSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        exclude = ('password',)
+## End Get Client #########################################################
+
+## Update Client Serializer ###############################################
+class UpdateClientSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = ('first_name', 'last_name', 'mobile',)
+## End Update Client ######################################################
+
+## Update Password Serializer (Admin & Client) ############################
+class UpdateUserPasswordSerializer(serializers.ModelSerializer):
+    password2 = serializers.CharField(write_only=True, style={'input_type': 'password'})
+
+    class Meta:
+        model = CustomUser
+        fields = ("password", "password2")
+        extra_kwargs = {
+                'password': {'write_only': True},
+            }
+
+    def validate(self, data):
+        password=data.get('password')
+        password2=data.pop('password2')
+        if (password and password2) and password != password2:
+            raise serializers.ValidationError("Password and confirm password do not match!")
+
+        return data
+
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data['password'])
+        instance.save()
+
+        return instance
+## End Update Password Serializer (Admin & Client) ########################
+
+
+
+
+
 
 
 class AdminSerializer(serializers.ModelSerializer):
@@ -261,33 +341,7 @@ class UpdateMainAdminSerializer(serializers.ModelSerializer):
 # End update client #####################################################################################################################
 
 
-# update password for all users
-## Update serializer ####################################################################################################################
-class UpdateUserPasswordSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = CustomUser
-        fields = ("password",)
-
-    extra_kwargs = {
-            'password': {'write_only': True},
-        }
-
-
-    # The Passowrd validation
-    def validate_password(self, value):
-
-        if len(value) < 6 or len(value) > 15:
-            raise serializers.ValidationError("Password must between 6 - 15 characters")
-        else:
-            return value
-
-    def update(self, instance, validated_data):
-        instance.set_password(validated_data['password'])
-        instance.save()
-
-        return instance
-# End update password for all users #####################################################################################################
 
 
 

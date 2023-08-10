@@ -5,10 +5,11 @@ from datetime import timedelta
 
 
 
-
 # CONSTANTS #################################################################
+# User Types
 ADMIN=1
 CLIENT=2
+
 STAFF=3
 SCANNER=4
 DATA_ENTRY=5
@@ -71,6 +72,8 @@ CSRF_TRUSTED_ORIGINS.append('http://127.0.0.1')
 
 # APPLICATIONS #################################################################
 INSTALLED_APPS = [
+    "admin_interface",
+    "colorfield",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -97,7 +100,7 @@ INSTALLED_APPS = [
     'import_export',
     'drf_yasg',
     'django_cleanup.apps.CleanupConfig',
-    'storages'
+    'storages',
 ]
 
 
@@ -228,11 +231,12 @@ USE_TZ = True
 
 
 # FILE STORAGE ########################################################################
-# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-# STATIC_URL = '/static/'
-# MEDIA_URL = '/images/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+STATIC_URL = '/static/'
+MEDIA_URL = '/images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
 # # S3 BUCKETS CONFIG ###
 # AWS_ACCESS_KEY_ID = 'AKIARHSDXOCNBWZA5MVO'
 # AWS_SECRET_ACCESS_KEY = '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'
@@ -243,35 +247,35 @@ USE_TZ = True
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # # FILE STORAGE ##############################################################
-is_s3_enabled = eval(env('S3_ENABLED'))
-if is_s3_enabled:
-    DEFAULT_FILE_STORAGE = 'hayak_backend.storage_backends.MediaStorage'
-    STATICFILES_STORAGE = 'hayak_backend.storage_backends.StaticStorage'
-    AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='eu-west-1')
-    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-    AWS_S3_CUSTOM_DOMAIN = env('AWS_S3_CUSTOM_DOMAIN')
-    AWS_LOCATION = env('AWS_LOCATION')
-    AWS_LOCATION_MEDIA = env('AWS_LOCATION_MEDIA')
-    STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-    MEDIA_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION_MEDIA)
-else:
-    # AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='eu-west-1')
-    # AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-    # AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+# is_s3_enabled = eval(env('S3_ENABLED'))
+# if is_s3_enabled:
+#     DEFAULT_FILE_STORAGE = 'hayak_backend.storage_backends.MediaStorage'
+#     STATICFILES_STORAGE = 'hayak_backend.storage_backends.StaticStorage'
+#     AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='eu-west-1')
+#     AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+#     AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+#     AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+#     AWS_S3_CUSTOM_DOMAIN = env('AWS_S3_CUSTOM_DOMAIN')
+#     AWS_LOCATION = env('AWS_LOCATION')
+#     AWS_LOCATION_MEDIA = env('AWS_LOCATION_MEDIA')
+#     STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+#     MEDIA_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION_MEDIA)
+# else:
+#     # AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='eu-west-1')
+#     # AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+#     # AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 
-    AWS_ACCESS_KEY_ID = 'AKIASEDK2WEKU37YOZP5'
-    AWS_SECRET_ACCESS_KEY = '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'
-    AWS_STORAGE_BUCKET_NAME = 'hayak-bucket'
-    AWS_S3_FILE_OVERWRITE = False
-    AWS_DEFAULT_ACL = None
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+#     AWS_ACCESS_KEY_ID = 'AKIASEDK2WEKU37YOZP5'
+#     AWS_SECRET_ACCESS_KEY = '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'
+#     AWS_STORAGE_BUCKET_NAME = 'hayak-bucket'
+#     AWS_S3_FILE_OVERWRITE = False
+#     AWS_DEFAULT_ACL = None
+#     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+#     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-    # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-    STATIC_URL = '/static/'
-    # MEDIA_URL = '/media/'
+#     # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#     STATIC_URL = '/static/'
+#     # MEDIA_URL = '/media/'
 
 
 

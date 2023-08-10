@@ -1,7 +1,9 @@
 from django.urls import path
 from account.api.views import (
+    client_list,
+    client_details,
+
     user_info,
-    create_client,
     update_user,
     Account,
     AccountDetails,
@@ -10,10 +12,17 @@ from account.api.views import (
 app_name = 'account'
 
 urlpatterns = [
-    # user
+    # Client APIs
+    path('client/user/list/', client_list, name='client_list'), # client only
+    path('client/user/details/<str:pk>/', client_details, name='client_details'), # client only
+
+
     path('user/info/', user_info, name='user_info'), # admin, client
-    path('user/create/', create_client, name='create_client'), # only client
     path('user/update/', update_user, name='update_client'), # admin, client
+
+    # path('user/list/', register_user, name='register_client'), # only client
+    # path('user/info/', user_info, name='user_info'), # admin, client
+    # path('user/update/', update_user, name='update_client'), # admin, client
 
 
     # Account

@@ -1,22 +1,29 @@
 from django.contrib import admin
-
-from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
-from event.models import EventType, InvitationStatus, Event, Invitation, Title, Rank, Order
-# from rangefilter.filters import DateRangeFilter, DateTimeRangeFilter
+from event.models import EventType, InvitationType, InvitationStatus, Event, Invitation, Title, Rank, Order
 
 
+# Inline Tables ###############################
+class EventTypeInline(admin.TabularInline):
+    model = EventType
+    extra = 0
 
-# class CheckinResource(resources.ModelResource):
-#     class Meta:
-#         model = Checkin
-#         fields = ('invitation__first_name', 'invitation__last_name', 'invitation__email', 'date', 'time',)
-#         export_order = ('invitation__first_name', 'invitation__last_name', 'invitation__email', 'date', 'time',)
+class InvitationInline(admin.TabularInline):
+    model = Invitation
+    extra = 0
+# End Inline Tables ###########################
+
+
 
 @admin.register(EventType)
 class EventTypeImportExport(ImportExportModelAdmin):
+    list_display = ['id', 'label', 'label_ar']
+
+
+@admin.register(InvitationType)
+class InvitationTypeImportExport(ImportExportModelAdmin):
     list_display = ['id', 'label', 'label_ar']
 
 
@@ -27,6 +34,7 @@ class InvitationStatusImportExport(ImportExportModelAdmin):
 
 @admin.register(Event)
 class EventImportExport(ImportExportModelAdmin):
+    # inlines = [EventTypeInline]
     list_display = ['id', 'name', 'user', 'type', 'city', 'country', 'capacity', 'is_active']
 
 
@@ -42,7 +50,7 @@ class RankImportExport(ImportExportModelAdmin):
 
 @admin.register(Invitation)
 class InvitationImportExport(ImportExportModelAdmin):
-    list_display = ['id', 'event','first_name', 'last_name', 'name', 'mobile', 'email', 'tickets', 'invitation_type', 'role', 'status', 'added_by', 'reference', 'qr', 'invitation', 'is_generated', 'email_sent']
+    list_display = ['id', 'event','first_name', 'last_name', 'name', 'mobile', 'email', 'tickets', 'role', 'status', 'added_by', 'reference', 'qr', 'invitation', 'is_generated', 'email_sent']
     list_per_page = 50
     search_fields = ['first_name', 'last_name', 'name', 'mobile', 'email', 'role', 'reference']
     list_filter = ['role', 'status', 'is_generated']

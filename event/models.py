@@ -131,6 +131,21 @@ class Rank(models.Model):
 
 
 
+# Invitation Types ##########################################################
+class InvitationType(models.Model):
+    label = models.CharField(max_length=500, null=True, blank=True)
+    label_ar = models.CharField(max_length=500, null=True, blank=True)
+    event = models.ForeignKey(Event, on_delete=models.SET_NULL, null=True, related_name="events")
+    
+    created_at = models.DateTimeField(null=True, auto_now_add=True)
+    update_at = models.DateTimeField(null=True, auto_now=True)
+
+    def __str__(self):
+        return self.label
+########################################################################
+
+
+
 # Invitations #############################################################
 class Invitation(models.Model):
     ROLE_CHOICES = (
@@ -152,7 +167,8 @@ class Invitation(models.Model):
     mobile = models.CharField(max_length=500, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     tickets = models.IntegerField(default=1)
-    invitation_type = models.CharField(max_length=1000, null=True, blank=True, default="no type")
+    # invitation_type = models.CharField(max_length=1000, null=True, blank=True, default="no type")
+    invitation_type = models.ForeignKey(InvitationType, on_delete=models.SET_NULL, null=True, related_name="invitation_types")
     role = models.CharField(default="participant", max_length=256, choices=ROLE_CHOICES, null=True, blank=True)
     status = models.ForeignKey(InvitationStatus, on_delete=models.CASCADE, null=True, default=2)
     reference = models.CharField(max_length=36, default=uuid.uuid4, unique=True)

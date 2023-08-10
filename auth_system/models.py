@@ -1,7 +1,8 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from utils.validators import _PHONE_REGEX
+from utils.validators import _PHONE_REGEX, name_validator
+from django.conf import settings
 
 
 
@@ -41,17 +42,25 @@ class UserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
+
     USER_TYPE_CHOICES = (
-        (1, 'Admin'),
-        (2, 'Client')
+        (settings.ADMIN, 'Admin'),
+        (settings.CLIENT, 'Client')
     )
 
     username = None
-    email = models.EmailField(_('email address'), unique=True, blank=False)
-    mobile = models.CharField(_('Mobile Number'), validators=[_PHONE_REGEX], max_length=20, null=True, blank=True)
-    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=2)
+    first_name = models.CharField(_('First Name'), validators=[name_validator], max_length=50, null=True, blank=True)
+    last_name = models.CharField(_('Last Name'), validators=[name_validator], max_length=50, null=True, blank=True)
+    email = models.EmailField(_('Email Address'), unique=True, blank=False)
+    mobile = models.CharField(_('Mobile Number'), validators=[_PHONE_REGEX], max_length=10, null=True, blank=True)
+    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=settings.CLIENT)
     image = models.ImageField(upload_to="client_logos", null=True, blank=True)
     first_sign_in = models.BooleanField(default=True)
+
+    # added_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(null=True, auto_now_add=True)
+    update_at = models.DateTimeField(null=True, auto_now=True)
+
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -60,7 +69,9 @@ class CustomUser(AbstractUser):
 
 
     def save(self, *args, **kwargs):
-        self.email = self.email.lower()
+        self.email = self.email.strip().lower()
+        self.first_name = self.first_name.strip().lower()
+        self.last_name = self.last_name.strip().lower()
         return super().save(*args, **kwargs)
 
     def __str__(self):

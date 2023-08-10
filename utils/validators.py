@@ -2,9 +2,23 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
 import re
 from utils.errors import Error, APIError
+from rest_framework import serializers
 
 
-######## Fields based validators
+
+# Names validators (first_name & last_name)
+def name_validator(value):
+    prevented_chars = [";", "'", '"', ">", "<", "-", "&", "="]
+    for chr in prevented_chars:
+        index = value.find(chr)  
+        if index != -1:
+            raise serializers.ValidationError("You can not use the following characters: (;, ', \", >, <, -, & and =)")
+    return value
+
+
+
+
+######## Fields based validators ##########
 _NAME_REGEX = RegexValidator(
     regex=r"^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z ]*$", message=_("Special characters and digits are now allowed."),
 )
@@ -41,6 +55,7 @@ _IBAN_REGEX = RegexValidator(
 _PASSWORD_REGEX = RegexValidator(
     regex=r"^(?=.{5,15})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$", message=_("Password length must between 5 to 15 digits, and at least contains one uppercase, lowercase and special characters"),
 )
+
 
 ### API validators
 def custom_password_validator(passowrd, useremail):

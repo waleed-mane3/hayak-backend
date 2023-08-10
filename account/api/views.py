@@ -1,13 +1,16 @@
-from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from account.permissions import UserTypeAccessAdminOrClient
+from account.api.permissions import ClientAccountObjectPermission
 # from django.conf import settings
 from tablib import Dataset
 
 from account.api.serializers import (
+    CreateClientSerializer,
+    GetClientSerializer,
+    UpdateClientSerializer,
+    
     CreateMainAdminSerializer,
     UpdateMainClientSerializer,
     UpdateMainAdminSerializer,
@@ -19,8 +22,6 @@ from account.api.serializers import (
     UsersDetailsSerializer,
     CreateAccountsSerializer
     )
-
-from account.models import Client, Admin
 from rest_framework.views import APIView
 from django.conf import settings
 from .queries import *
@@ -29,27 +30,18 @@ from utils.errors import Error, APIError
 
 
 
+###########################################################################
+# ACTION DONE BY CLIENTS ##################################################
+###########################################################################
 
-# Create Client #####################################################
+# Create & List Clients ###################################################
 @api_view(['POST',])
-def create_client(request):
+def client_list(request):
 
     data = {}
-    # try:
-    #     user_type = request.data['user_type']
-    # except:
-    #     data['error'] = "user_type must be provided!"
-    #     request_status = status.HTTP_400_BAD_REQUEST
-    #     return Response(data=data, status=request_status)
-
-    # if user_type != 2:
-    #     data['error'] = "user_type must be integer number!"
-    #     request_status = status.HTTP_400_BAD_REQUEST
-    #     return Response(data=data, status=request_status)
-
-
+    
     if request.method == 'POST':
-        serializer = CreateMainClientSerializer(data=request.data)
+        serializer = CreateClientSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
@@ -57,11 +49,107 @@ def create_client(request):
             request_status = status.HTTP_201_CREATED
 
         else:
-            data['error'] = serializer.errors
+            data['details'] = serializer.errors
             request_status = status.HTTP_400_BAD_REQUEST
 
         return Response(data=data, status=request_status)
-# End create client #################################################
+# End Create & List Clients ###############################################
+
+
+# Get, Update and Delete Client Account (password not included with update)
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated, ClientAccountObjectPermission,])
+def client_details(request, pk):
+    user = request.user
+    data = {}
+
+    # Find user 
+    try:
+        user = CustomUser.objects.get(id=pk)
+    except CustomUser.DoesNotExist:
+        data['details'] = "User is not found!" 
+        request_status = status.HTTP_404_NOT_FOUND
+        return Response(data=data, status=request_status)
+
+
+    # Checking Permission
+    if not ClientAccountObjectPermission().has_object_permission(request, None, user):
+        data['details'] = "You don't have permission to perform this action!" 
+        request_status = status.HTTP_403_FORBIDDEN
+        return Response(data=data, status=request_status)
+    
+
+    # Get Client
+    if request.method == 'GET':
+        print(f"requester: {request.user.id}")
+        print(f"object: {user.id}")
+        serializer = GetClientSerializer(user)
+        data = serializer.data
+        request_status = status.HTTP_200_OK
+        return Response(data=data, status=request_status)
+    
+
+    # Update Client 
+    if request.method == 'PUT':
+        serializer = UpdateClientSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            data['success'] = "User has been updated successfully!"
+            request_status = status.HTTP_200_OK
+        else:
+            data['detail'] = serializer.errors
+            request_status = status.HTTP_400_BAD_REQUEST
+        
+        return Response(data=data, status=request_status)
+
+
+    # Delete Client 
+    if request.method == 'DELETE':
+        operation = user.delete()
+        data = {}
+        if operation:
+            data['success'] = "User has been deleted successfully!"
+            request_status = status.HTTP_204_NO_CONTENT
+        else:
+            data["detail"] = "Something went wrong during the delete operation!"
+            request_status = status.HTTP_501_NOT_IMPLEMENTED
+
+        return Response(data=data, status=status.HTTP_204_NO_CONTENT)
+###########################################################################
+
+
+
+# Update password (Admin & Client) ########################################
+@api_view(['PUT',])
+@permission_classes([IsAuthenticated])
+def update_password(request):
+    user = request.user
+
+    if request.method == "PUT":
+        serializer = UpdateUserPasswordSerializer(user, data=request.data)
+        data = {}
+
+        if serializer.is_valid():
+            serializer.save()
+            data['success'] = "The user has been updated successfully!"
+            request_status = status.HTTP_200_OK
+        else:
+            data['details'] = serializer.errors
+            request_status = status.HTTP_400_BAD_REQUEST
+
+        return Response(data=data, status=request_status)
+# End update password #####################################################
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -90,28 +178,6 @@ def update_user(request):
         return Response(data=data, status=request_status)
 # End update user ###################################################
 
-
-
-# Update password ###################################################
-@api_view(['PUT',])
-@permission_classes([IsAuthenticated])
-def update_password(request):
-    user = request.user
-
-    if request.method == "PUT":
-        serializer = UpdateUserPasswordSerializer(user, data=request.data)
-        data = {}
-
-        if serializer.is_valid():
-            serializer.save()
-            data['success'] = "The user has been updated successfully!"
-            request_status = status.HTTP_200_OK
-        else:
-            data['error'] = serializer.errors
-            request_status = status.HTTP_400_BAD_REQUEST
-
-        return Response(data=data, status=request_status)
-# End update password ###############################################
 
 
 
@@ -164,7 +230,7 @@ def get_health(request):
 class Account(APIView):
     """Get and create accounts"""
 
-    permission_classes = [IsAuthenticated, UserTypeAccessAdminOrClient]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
         user = request.user
@@ -213,7 +279,7 @@ class Account(APIView):
 class AccountDetails(APIView):
     """Get and create accounts"""
 
-    permission_classes = [IsAuthenticated, UserTypeAccessAdminOrClient]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         user = request.user

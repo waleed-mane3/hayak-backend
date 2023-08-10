@@ -1,10 +1,10 @@
-@hayak_api_local = http://127.0.0.1:9000/api
+@hayak_api_local = http://127.0.0.1:5000/api
 # @hayak_api_local = https://app.hayaksa.com/api
 # USERS
-# admin1@gmail.com
-# client1@gmail.com
-# scanner1@gmail.com
-# entry1@gmail.com
+# admin@hayaksa.com
+# client@hayaksa.com
+# scanner@hayaksa.com
+# entry@hayaksa.com
 
 
 
@@ -14,7 +14,7 @@ POST {{hayak_api_local}}/auth/token/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "test@gmail.com",
+    "email": "client@gmail.com",
     "password": "123123"
 }
 ###############################################################

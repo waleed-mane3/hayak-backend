@@ -1,0 +1,110 @@
+@hayak_api_local = http://127.0.0.1:5000/api
+
+# USERS
+# admin@hayaksa.com
+# client@hayaksa.com
+# scanner@hayaksa.com
+# entry@hayaksa.com
+
+
+### Login #####################################################
+# @name auth_login_local
+POST {{hayak_api_local}}/auth/token/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "client16@hayaksa.com",
+    "password": "123_123"
+}
+###############################################################
+
+
+
+
+### Create New Client #########################################
+POST {{hayak_api_local}}/account/client/user/list/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "first_name":"Ahmad",
+    "last_name":"Mohsen",
+    "mobile":"0501386177",
+    "email":"client16@hayaksa.com",
+    "password": "123_123",
+    "password2": "123_123"
+}
+###############################################################
+
+
+### Get Client ################################################
+GET {{hayak_api_local}}/account/client/user/details/9/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################
+
+
+### Update Client #############################################
+PUT {{hayak_api_local}}/account/client/user/details/15/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+
+{
+    "first_name":"Ahmad updated",
+    "last_name":"Mohsen",
+    "mobile":"0501386177"
+}
+###############################################################
+
+
+### Update Password ###########################################
+PUT {{hayak_api_local}}/auth/password-update/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+
+{
+    "password":"vision_1234",
+    "password2":"vision_1234"
+}
+###############################################################
+
+
+
+
+
+
+
+### Get accounts (as client or admin) #########################
+GET {{hayak_api_local}}/account/list/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################
+
+### Update account (as client or admin) #######################
+PATCH {{hayak_api_local}}/account/details/18/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+
+{
+    "first_name": "Ahmad updated",
+    "last_name": "Omar",
+    "email": "ahmad1@gmail.com",
+    "mobile": "0501234855",
+    "user_type": 2,
+    "password": "hayak_123"
+}
+###############################################################
+
+
+### Get single accont (as client, staff or admin) #############
+GET {{hayak_api_local}}/account/details/18/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################
+
+
+
+### Delete account (as client or admin)  ######################
+DELETE {{hayak_api_local}}/account/details/18/ HTTP/1.1
+Authorization: Bearer {{auth_login_local.response.body.access}}
+Content-Type: application/json
+###############################################################
